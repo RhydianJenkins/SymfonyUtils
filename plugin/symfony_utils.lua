@@ -1,1 +1,1 @@
-vim.api.nvim_create_user_command("health", require("symfony_utils").health, {})
+vim.api.nvim_create_user_command("GoToSymfonyDefinition", require("symfony_definition").go_to_def, {})
