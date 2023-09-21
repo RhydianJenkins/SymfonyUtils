@@ -1,7 +1,7 @@
 local M = {}
 
 M.config = {
-    search_dirs = { "." }
+    search_dirs = { "." },
 }
 
 M.setup = function(args)
@@ -25,12 +25,12 @@ local function regex_exists_in_file(file_path, regex_pattern)
 end
 
 local function goto_line_matching_regex(regex_pattern)
-    local last_line = vim.fn.line('$')
+    local last_line = vim.fn.line("$")
 
     for line_number = 0, last_line do
         local line_text = vim.fn.getline(line_number)
         if vim.fn.match(line_text, regex_pattern) > -1 then
-            vim.cmd(':' .. line_number)
+            vim.cmd(":" .. line_number)
             return
         end
     end
@@ -39,14 +39,14 @@ local function goto_line_matching_regex(regex_pattern)
 end
 
 M.go_to_def = function()
-    local word = vim.fn.expand('<cword>')
+    local word = vim.fn.expand("<cword>")
     local pattern = "**/*.yml"
 
     for _, dir in ipairs(M.config.search_dirs) do
         local yaml_files = vim.fn.globpath(dir, pattern, true, true)
 
         for _, file in ipairs(yaml_files) do
-            local search_regex = 'class:.*.\\' .. word .. '$';
+            local search_regex = "class:.*.\\" .. word .. "$";
             if regex_exists_in_file(file, search_regex) then
                 vim.cmd("e " .. file)
                 goto_line_matching_regex(search_regex)
