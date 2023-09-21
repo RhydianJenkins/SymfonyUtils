@@ -46,7 +46,7 @@ M.go_to_def = function()
         local yaml_files = vim.fn.globpath(dir, pattern, true, true)
 
         for _, file in ipairs(yaml_files) do
-            local search_regex = "class:.*.\\" .. word .. "$";
+            local search_regex = "class:.*.\\" .. word .. "$"
             if regex_exists_in_file(file, search_regex) then
                 vim.cmd("e " .. file)
                 goto_line_matching_regex(search_regex)
