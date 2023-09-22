@@ -38,20 +38,34 @@ local function goto_line_matching_regex(regex_pattern)
     print("No line matching the regex found.")
 end
 
+local function get_yml_files()
+    local all_files = {}
+
+    for _, dir in ipairs(M.config.search_dirs) do
+        local yml_files = vim.fn.globpath(dir, "**/*.yml", true, true)
+        for _, file in ipairs(yml_files) do
+            table.insert(all_files, file)
+        end
+
+        local yaml_files = vim.fn.globpath(dir, "**/*.yaml", true, true)
+        for _, file in ipairs(yaml_files) do
+            table.insert(all_files, file)
+        end
+    end
+
+    return all_files
+end
+
 M.go_to_def = function()
     local word = vim.fn.expand("<cword>")
     local search_regex = "class:.*.\\" .. word .. "$"
-    local pattern = "**/*.ya?ml"
+    local yml_files = get_yml_files()
 
-    for _, dir in ipairs(M.config.search_dirs) do
-        local yaml_files = vim.fn.globpath(dir, pattern, true, true)
-
-        for _, file in ipairs(yaml_files) do
-            if regex_exists_in_file(file, search_regex) then
-                vim.cmd("e " .. file)
-                goto_line_matching_regex(search_regex)
-                return
-            end
+    for _, file in ipairs(yml_files) do
+        if regex_exists_in_file(file, search_regex) then
+            vim.cmd("e " .. file)
+            goto_line_matching_regex(search_regex)
+            return
         end
     end
 
