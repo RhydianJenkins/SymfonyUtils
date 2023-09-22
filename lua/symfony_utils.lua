@@ -56,7 +56,7 @@ local function get_yml_files()
     return all_files
 end
 
-M.go_to_def = function()
+local function go_to_yml_definition()
     local word = vim.fn.expand("<cword>")
     local search_regex = "class:.*.\\" .. word .. "$"
     local yml_files = get_yml_files()
@@ -70,6 +70,15 @@ M.go_to_def = function()
     end
 
     print("Symfony definition not found for: " .. word)
+end
+
+M.go_to_def = function()
+    if vim.bo.filetype == 'yml' or vim.bo.filetype == 'yaml' then
+        print('TODO go to definition')
+        return
+    end
+
+    go_to_yml_definition()
 end
 
 return M
