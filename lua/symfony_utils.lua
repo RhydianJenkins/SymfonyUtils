@@ -73,8 +73,8 @@ local function go_to_yml_definition()
 end
 
 M.go_to_def = function()
-    if vim.bo.filetype == 'yml' or vim.bo.filetype == 'yaml' then
-        print('TODO go to definition')
+    if vim.bo.filetype == "yml" or vim.bo.filetype == "yaml" then
+        print("TODO go to definition")
         return
     end
 
