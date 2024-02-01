@@ -18,9 +18,3 @@ require('symfony_utils').setup({
     },
 })
 ```
-
-## TODO:
-
-- [x] `GoToSymfonyDefinition`: Jumps from a source file to its yml definition
-- [x] `GoToDefinitionFile`: Jumps from a yml definition file to its source file (possibly add this to `GoToSymfonyDefinition`)
-- [ ] Improve namespace checking when multiple files exist with the same name
