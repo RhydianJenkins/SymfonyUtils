@@ -39,13 +39,15 @@ local function goto_line_matching_regex(regex_pattern)
     print("No line matching the regex found.")
 end
 
-local function get_class_files()
+local function get_class_files(namespace)
     local all_files = {}
 
     for _, dir in ipairs(M.config.class_dirs) do
         local class_files = vim.fn.globpath(dir, "**/*.php", true, true)
         for _, file in ipairs(class_files) do
-            table.insert(all_files, file)
+            if not namespace or regex_exists_in_file(file, "namespace " .. namespace) then
+                table.insert(all_files, file)
+            end
         end
     end
 
@@ -89,13 +91,14 @@ end
 local function go_to_class_definition()
     local line = vim.fn.getline(".")
     local class_name = string.match(line, ".*\\(.*)")
+    local namespace = string.match(line, ".*%s(.*)\\.*") or ""
 
     if not class_name then
         print("No class name found on line")
         return
     end
 
-    local class_files = get_class_files()
+    local class_files = get_class_files(namespace)
     local file_name = class_name .. ".php$"
     local filtered_files = vim.tbl_filter(function(file)
         return string.match(file, file_name)
