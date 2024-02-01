@@ -73,8 +73,15 @@ local function get_yml_files()
 end
 
 local function go_to_yml_definition()
-    local word = vim.fn.expand("<cword>")
-    local search_regex = "class:.*.\\" .. word .. "$"
+    local line = vim.fn.getline(".")
+
+    if not string.match(line, "class ") then
+        print("No class found on line")
+        return
+    end
+
+    local class_name = string.match(line, ".*%s(.*)")
+    local search_regex = "class:.*.\\" .. class_name .. "$"
     local yml_files = get_yml_files()
 
     for _, file in ipairs(yml_files) do
