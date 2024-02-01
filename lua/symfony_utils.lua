@@ -1,7 +1,8 @@
 local M = {}
 
 M.config = {
-    search_dirs = { "." },
+    yaml_dirs = { "." },
+    class_dirs = { "." },
 }
 
 M.setup = function(args)
@@ -38,10 +39,23 @@ local function goto_line_matching_regex(regex_pattern)
     print("No line matching the regex found.")
 end
 
+local function get_class_files()
+    local all_files = {}
+
+    for _, dir in ipairs(M.config.class_dirs) do
+        local class_files = vim.fn.globpath(dir, "**/*.php", true, true)
+        for _, file in ipairs(class_files) do
+            table.insert(all_files, file)
+        end
+    end
+
+    return all_files
+end
+
 local function get_yml_files()
     local all_files = {}
 
-    for _, dir in ipairs(M.config.search_dirs) do
+    for _, dir in ipairs(M.config.yaml_dirs) do
         local yml_files = vim.fn.globpath(dir, "**/*.yml", true, true)
         for _, file in ipairs(yml_files) do
             table.insert(all_files, file)
@@ -72,10 +86,37 @@ local function go_to_yml_definition()
     print("Symfony definition not found for: " .. word)
 end
 
+local function go_to_class_definition()
+    local line = vim.fn.getline(".")
+    local class_name = string.match(line, ".*\\(.*)")
+
+    if not class_name then
+        print("No class name found on line")
+        return
+    end
+
+    local class_files = get_class_files()
+    local file_name = class_name .. ".php$"
+    local filtered_files = vim.tbl_filter(function(file)
+        return string.match(file, file_name)
+    end, class_files)
+
+    if #filtered_files == 0 then
+        print("No files found with the name")
+        return
+    end
+
+    if #filtered_files == 1 then
+        vim.cmd("e " .. filtered_files[1])
+        return
+    end
+
+    print("Multiple files found with the same name" .. vim.inspect(filtered_files))
+end
+
 M.go_to_def = function()
     if vim.bo.filetype == "yml" or vim.bo.filetype == "yaml" then
-        print("TODO go to definition")
-        return
+        return go_to_class_definition()
     end
 
     go_to_yml_definition()
