@@ -111,7 +111,11 @@ local function go_to_class_definition()
         return
     end
 
-    print("Multiple files found with the same name" .. vim.inspect(filtered_files))
+    vim.ui.select(filtered_files, {
+        prompt = #filtered_files .. " found. Select one:",
+    }, function(choice)
+        vim.cmd("e " .. choice)
+    end)
 end
 
 M.go_to_def = function()
