@@ -18,3 +18,12 @@ require('symfony_utils').setup({
     },
 })
 ```
+
+## TODO
+
+Go to definition of yaml argument params, e.g.
+
+```
+arguments:
+  - "@ai.openai.client"
+```
