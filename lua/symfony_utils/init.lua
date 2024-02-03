@@ -11,9 +11,8 @@ M.setup = function(args)
     M.config = vim.tbl_deep_extend("force", M.config, args or {})
 end
 
----@param class_name string
-local function go_to_yml_definition(class_name)
-    local search_regex = "class:.*.\\" .. class_name .. "$"
+---@param search_regex string
+local function go_to_yml_definition(search_regex)
     local yml_files = utils.get_yml_files(M.config.yaml_dirs)
 
     for _, file in ipairs(yml_files) do
@@ -59,7 +58,7 @@ M.go_to_def = function()
 
         if string.match(line, ".*[\"']@.*") then
             local container_service_name = string.match(line, ".*@(.*)[\"']")
-            print("TODO container name: " .. container_service_name)
+            go_to_yml_definition(" " .. container_service_name .. ":$")
 
             return
         end
@@ -74,15 +73,19 @@ M.go_to_def = function()
             end
 
             go_to_class_definition(class_name, namespace)
+
             return
         end
 
         print("No class or service definition found on line")
+        return
     end
 
     if vim.bo.filetype == "php" then
         local class_name = vim.fn.expand("<cword>")
-        go_to_yml_definition(class_name)
+        local search_regex = "class:.*.\\" .. class_name .. "$"
+        go_to_yml_definition(search_regex)
+
         return
     end
 
