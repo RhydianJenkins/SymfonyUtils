@@ -16,6 +16,7 @@ M.regex_exists_in_file = function(file_path, regex_pattern)
     return false
 end
 
+---@param regex_pattern string
 M.goto_line_matching_regex = function(regex_pattern)
     local last_line = vim.fn.line("$")
 
@@ -30,6 +31,7 @@ M.goto_line_matching_regex = function(regex_pattern)
     print("No line found matching: '" .. regex_pattern .. "'")
 end
 
+---@param yaml_dirs table
 M.get_yml_files = function(yaml_dirs)
     local all_files = {}
 
@@ -48,6 +50,8 @@ M.get_yml_files = function(yaml_dirs)
     return all_files
 end
 
+---@param class_dirs table
+---@param namespace string
 M.get_class_files = function(class_dirs, namespace)
     local all_files = {}
 
