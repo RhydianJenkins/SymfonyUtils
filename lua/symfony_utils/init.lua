@@ -14,14 +14,18 @@ end
 ---@param search_regex string
 local function go_to_yml_definition(search_regex)
     local yml_files = utils.get_yml_files(M.config.yaml_dirs)
+    local found_files = {}
 
     for _, file in ipairs(yml_files) do
         if utils.regex_exists_in_file(file, search_regex) then
-            vim.cmd("e " .. file)
-            utils.goto_line_matching_regex(search_regex)
-            return
+            -- vim.cmd("e " .. file)
+            -- utils.goto_line_matching_regex(search_regex)
+
+            table.insert(found_files, file)
         end
     end
+
+    print("found files: " .. vim.inspect(found_files))
 
     print("Symfony definition not found for: " .. search_regex)
 end
@@ -83,6 +87,11 @@ M.go_to_def = function()
 
     if vim.bo.filetype == "php" then
         local class_name = vim.fn.expand("<cword>")
+
+        local namespace = utils.search_pattern_and_capture("namespace (.*)")
+        namespace = string.match(namespace, "(.*);") or namespace
+        print("TODO use namespace to improve search " .. namespace)
+
         local search_regex = "class:.*.\\" .. class_name .. "$"
         go_to_yml_definition(search_regex)
 
