@@ -30,13 +30,13 @@ local function goto_line_matching_regex(regex_pattern)
 
     for line_number = 0, last_line do
         local line_text = vim.fn.getline(line_number)
-        if vim.fn.match(line_text, regex_pattern) > -1 then
+        if string.match(line_text, regex_pattern) then
             vim.cmd(":" .. line_number)
             return
         end
     end
 
-    print("No line matching the regex found.")
+    print("No line found matching: '" .. regex_pattern .. "'")
 end
 
 local function get_class_files(namespace)
@@ -73,14 +73,7 @@ local function get_yml_files()
 end
 
 local function go_to_yml_definition()
-    local line = vim.fn.getline(".")
-
-    if not string.match(line, "class ") then
-        print("No class found on line")
-        return
-    end
-
-    local class_name = string.match(line, ".*%s(.*)")
+    local class_name = vim.fn.expand("<cword>")
     local search_regex = "class:.*.\\" .. class_name .. "$"
     local yml_files = get_yml_files()
 
@@ -92,7 +85,7 @@ local function go_to_yml_definition()
         end
     end
 
-    print("Symfony definition not found for: " .. word)
+    print("Symfony definition not found for: " .. search_regex)
 end
 
 local function go_to_class_definition()
