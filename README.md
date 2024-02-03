@@ -21,9 +21,4 @@ require('symfony_utils').setup({
 
 ## TODO
 
-Go to definition of yaml argument params, e.g.
-
-```
-arguments:
-  - "@ai.openai.client"
-```
+- [ ] Recognise when there are multiple yaml definitions available, and not just return the first one
