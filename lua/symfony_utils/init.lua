@@ -35,8 +35,10 @@ local function go_to_yml_definition(search_regex)
         vim.ui.select(found_files, {
             prompt = #found_files .. " found. Select one:",
         }, function(choice)
-            vim.cmd("e " .. choice)
-            utils.goto_line_matching_regex(search_regex)
+            if choice then
+                vim.cmd("e " .. choice)
+                utils.goto_line_matching_regex(search_regex)
+            end
         end)
     end
 end
@@ -63,7 +65,9 @@ local function go_to_class_definition(class_name, namespace)
     vim.ui.select(filtered_files, {
         prompt = #filtered_files .. " found. Select one:",
     }, function(choice)
-        vim.cmd("e " .. choice)
+        if choice then
+            vim.cmd("e " .. choice)
+        end
     end)
 end
 
