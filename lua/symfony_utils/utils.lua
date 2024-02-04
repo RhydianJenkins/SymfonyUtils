@@ -105,7 +105,6 @@ M.open_file_picker = function(files, search_regex, enable_telescope)
     if enable_telescope then
         builtin.grep_string({
             prompt_title = "Symfony definitions",
-            -- search = search_regex, -- TODO Not showing any results?
             search_dirs = files,
         })
     else
