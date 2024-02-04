@@ -51,7 +51,7 @@ M.get_yml_files = function(yaml_dirs)
 end
 
 ---@param class_dirs table
----@param namespace string
+---@param namespace string, nil
 M.get_class_files = function(class_dirs, namespace)
     local all_files = {}
 
