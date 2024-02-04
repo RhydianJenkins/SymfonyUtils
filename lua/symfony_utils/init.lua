@@ -5,6 +5,7 @@ local utils = require("symfony_utils.utils")
 M.config = {
     yaml_dirs = { "." },
     class_dirs = { "." },
+    enable_telescope = true,
 }
 
 M.setup = function(args)
@@ -32,19 +33,12 @@ local function go_to_yml_definition(search_regex)
     end
 
     if #found_files > 1 then
-        vim.ui.select(found_files, {
-            prompt = #found_files .. " found. Select one:",
-        }, function(choice)
-            if choice then
-                vim.cmd("e " .. choice)
-                utils.goto_line_matching_regex(search_regex)
-            end
-        end)
+        utils.open_file_picker(found_files, search_regex, M.config.enable_telescope)
     end
 end
 
 ---@param class_name string
----@param namespace string, nil
+---@param namespace string|nil
 local function go_to_class_definition(class_name, namespace)
     local class_files = utils.get_class_files(M.config.class_dirs, namespace)
     local file_name = "/" .. class_name .. ".php$"
@@ -62,13 +56,7 @@ local function go_to_class_definition(class_name, namespace)
         return
     end
 
-    vim.ui.select(filtered_files, {
-        prompt = #filtered_files .. " found. Select one:",
-    }, function(choice)
-        if choice then
-            vim.cmd("e " .. choice)
-        end
-    end)
+    utils.open_file_picker(filtered_files, file_name, M.config.enable_telescope)
 end
 
 local function find_definition_from_yml_file()
@@ -83,7 +71,7 @@ local function find_definition_from_yml_file()
 
     if string.match(line, ".*class:.*") then
         local class_name = string.match(line, ".*\\(.*)")
-        local namespace = string.match(line, ".*%s(.*)\\.*") or ""
+        local namespace = string.match(line, ".*%s(.*)\\.*") or nil
 
         if not class_name then
             print("No class name found on line")

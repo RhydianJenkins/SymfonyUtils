@@ -1,5 +1,8 @@
 local M = {}
 
+---@param file_path string
+---@param regex_pattern string
+---@return boolean
 M.regex_exists_in_file = function(file_path, regex_pattern)
     local file = io.open(file_path, "r")
 
@@ -51,7 +54,7 @@ M.get_yml_files = function(yaml_dirs)
 end
 
 ---@param class_dirs table
----@param namespace string, nil
+---@param namespace string|nil
 M.get_class_files = function(class_dirs, namespace)
     local all_files = {}
 
@@ -68,7 +71,7 @@ M.get_class_files = function(class_dirs, namespace)
 end
 
 ---@param pattern string
----@return string, nil
+---@return string|nil
 M.search_pattern_and_capture = function(pattern)
     local bufnr = vim.api.nvim_get_current_buf()
     local line_count = vim.api.nvim_buf_line_count(bufnr)
@@ -83,6 +86,43 @@ M.search_pattern_and_capture = function(pattern)
         end
     end
     return nil
+end
+
+---@param files table
+---@param search_regex string|nil
+---@param enable_telescope boolean|nil
+M.open_file_picker = function(files, search_regex, enable_telescope)
+    local ok, builtin = pcall(require, "telescope.builtin")
+
+    if enable_telescope and not ok then
+        print([[
+            telescope.nvim is not installed.
+            Either install it or disable it with the `enable_telescope` config.
+        ]])
+        return
+    end
+
+    if enable_telescope then
+        builtin.grep_string({
+            prompt_title = "Symfony definitions",
+            -- search = search_regex, -- TODO Not showing any results?
+            search_dirs = files,
+        })
+    else
+        vim.ui.select(files, {
+            prompt = #files .. " found. Select one:",
+        }, function(choice)
+            if not choice then
+                return
+            end
+
+            vim.cmd("e " .. choice)
+
+            if search_regex then
+                M.goto_line_matching_regex(search_regex)
+            end
+        end)
+    end
 end
 
 return M

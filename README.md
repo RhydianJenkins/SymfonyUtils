@@ -16,6 +16,7 @@ require('symfony_utils').setup({
         "path/to/config/dir",
         "path/to/other/config/dir",
     },
+    enable_telescope = true -- disabling will use vim.ui.select instead
 })
 
 vim.keymap.set("n", "gsd", "<cmd>GoToSymfonyDefinition<CR>", { desc = "[G]o to [S]ymfony [D]efinition" })
