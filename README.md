@@ -17,4 +17,6 @@ require('symfony_utils').setup({
         "path/to/other/config/dir",
     },
 })
+
+vim.keymap.set("n", "gsd", "<cmd>GoToSymfonyDefinition<CR>", { desc = "[G]o to [S]ymfony [D]efinition" })
 ```
