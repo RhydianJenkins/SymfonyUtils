@@ -18,7 +18,3 @@ require('symfony_utils').setup({
     },
 })
 ```
-
-## TODO
-
-- [ ] Recognise when there are multiple yaml definitions available, and not just return the first one
