@@ -19,5 +19,6 @@ require('symfony_utils').setup({
     enable_telescope = true -- disabling will use vim.ui.select instead
 })
 
+-- put your cursor over a class name and jump to its yaml definition (and back again!)
 vim.keymap.set("n", "gsd", "<cmd>GoToSymfonyDefinition<CR>", { desc = "[G]o to [S]ymfony [D]efinition" })
 ```
